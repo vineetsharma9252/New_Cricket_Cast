@@ -7,15 +7,28 @@ This project aims to predict the final score of a cricket innings using ball-by-
 ## Dataset Description
 The dataset contains ball-by-ball details of cricket matches, including:
 
-| Column | Description |
-| inning | Inning number (1 or 2) |
-| over | Over number (0-20) |
-| ball | Ball number within the over (0-5)
-total_runs	Runs scored on the ball (including extras)
-is_home_team	Boolean indicating if the batting team is the home team
-final_innings_score	Target variable: total runs scored in the innings
-batter_code	Encoded unique ID for batter
-bowler_code	Encoded unique ID for bowler
-non_striker_code	Encoded unique ID for non-striker
-batting_team_code	Encoded team ID for batting team
-bowling_team_code	Encoded team ID for bowling team
+```markdown
+| Column               | Description                                                 |
+|----------------------|-------------------------------------------------------------|
+| `inning`             | Inning number (1 or 2)                                      |
+| `over`               | Over number (0-20)                                          |
+| `ball`               | Ball number within the over (1-6)                           |
+| `score`              | Runs scored upto that ball                                  |
+| `is_home_team`       | Boolean indicating if the batting team is the home team     |
+| `final_innings_score`| Target variable: total runs scored in the innings           |
+| `batter_code`        | Encoded unique ID for the batter                            |
+| `bowler_code`        | Encoded unique ID for the bowler                            |
+| `non_striker_code`   | Encoded unique ID for the non-striker                       |
+| `batting_team_code`  | Encoded team ID for the batting team                        |
+| `bowling_team_code`  | Encoded team ID for the bowling team                        |
+```
+
+```bash
+.
+├── Preprocessing.ipynb          # Data loading and encoding
+├── Feature_Engineering.ipynb    # New features creation
+├── Model.ipynb                  # Model training, evaluation, saving
+└── README.md
+```                   
+
+
