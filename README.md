@@ -67,3 +67,13 @@ The results as quoted below shows that the Extra Tree Regression is the best mod
 | XGB Regressor          | 13.84     | 18.65     | 0.645      |
 ```
 This clearly shows how extra tree regressor is best model among all the used models
+
+## Installation
+Make sure Python 3.8+ is installed. Then install dependencies:
+```bash
+pip install pandas scikit-learn xgboost
+```
+You can then run the notebooks in order:
+- Preprocessing.ipynb -> Clean data and Observe trends
+- Feature_Engineering.ipynb -> Encode and Create new features
+- Model.ipynb -> Train models to analyse and get the best out of them
