@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fantasy Cricket Game</title>
+    <style>
+      :root {
+        --cricket-green: #1a5d1a;
+        --cricket-gold: #f9a825;
+        --cricket-red: #d32f2f;
+        --cricket-blue: #1976d2;
+      }
+
+      body {
+        font-family: "Open Sans", sans-serif;
+        background: url("https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=2070&auto=format&fit=crop")
+          no-repeat center center fixed;
+        background-size: cover;
+        position: relative;
+        min-height: 100vh;
+      }
+
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: -1;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Montserrat", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #fff;
+      }
+
+      .header-animation {
+        animation: pulse 2s infinite alternate;
+        text-shadow: 0 0 10px rgba(249, 168, 37, 0.7);
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.03);
+        }
+      }
+
+      .team-container {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        border: 3px solid var(--cricket-gold);
+        overflow: hidden;
+        animation: fadeIn 0.5s ease-out;
+        position: relative;
+      }
+
+      .team-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .player-list {
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.95) 0%,
+          rgba(245, 245, 245, 0.95) 100%
+        );
+        border-radius: 10px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--cricket-green) #f1f1f1;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .player-list::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .player-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .player-list::-webkit-scrollbar-thumb {
+        background-color: var(--cricket-green);
+        border-radius: 10px;
+      }
+
+      .player-item {
+        transition: all 0.2s ease;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 8px 12px;
+      }
+
+      .player-item:hover {
+        background-color: rgba(26, 93, 26, 0.1);
+        transform: translateX(5px);
+      }
+
+      .player-item label {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+      }
+
+      .player-item input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--cricket-green);
+        border-radius: 4px;
+        margin-right: 10px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s;
+      }
+
+      .player-item input[type="checkbox"]:checked {
+        background-color: var(--cricket-green);
+      }
+
+      .player-item input[type="checkbox"]:checked::after {
+        content: "✓";
+        position: absolute;
+        color: white;
+        font-size: 14px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .player-cost {
+        background-color: var(--cricket-gold);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        animation: bounce 1s infinite alternate;
+      }
+
+      @keyframes bounce {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(-2px);
+        }
+      }
+
+      .submit-btn {
+        background: linear-gradient(
+          135deg,
+          var(--cricket-green) 0%,
+          #2e7d32 100%
+        );
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(26, 93, 26, 0.4);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .submit-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(26, 93, 26, 0.6);
+      }
+
+      .submit-btn::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          to bottom right,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.3) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        transform: rotate(30deg);
+        animation: shine 3s infinite;
+      }
+
+      @keyframes shine {
+        0% {
+          left: -50%;
+        }
+        100% {
+          left: 150%;
+        }
+      }
+
+      .results-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        border: 3px solid var(--cricket-gold);
+        animation: fadeIn 0.5s ease-out;
+        position: relative;
+        padding-bottom: 40px;
+      }
+
+      .results-container::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 40px;
+        background: repeating-linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.1),
+          rgba(255, 255, 255, 0.1) 10px,
+          rgba(0, 0, 0, 0.1) 10px,
+          rgba(0, 0, 0, 0.1) 20px
+        );
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .winner-banner {
+        background: linear-gradient(
+          135deg,
+          var(--cricket-gold) 0%,
+          #ffc107 100%
+        );
+        color: #000;
+        padding: 15px;
+        border-radius: 8px;
+        animation: pulse 1.5s infinite;
+        box-shadow: 0 4px 15px rgba(249, 168, 37, 0.4);
+        text-align: center;
+      }
+
+      .score-display {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--cricket-green);
+        position: relative;
+        display: inline-block;
+      }
+
+      .score-display::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--cricket-gold);
+        transform: scaleX(0);
+        transform-origin: left;
+        animation: expand 0.5s 0.3s forwards;
+      }
+
+      @keyframes expand {
+        to {
+          transform: scaleX(1);
+        }
+      }
+
+      .cricket-ball {
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+        border-radius: 50%;
+        display: inline-block;
+        margin: 0 10px;
+        position: relative;
+        animation: spin 2s linear infinite;
+      }
+
+      .cricket-ball::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: white;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      .cricket-ball::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 2px;
+        background: white;
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Search Bar Styling */
+      .search-bar {
+        width: 100%;
+        padding: 10px 15px;
+        border: 2px solid var(--cricket-green);
+        border-radius: 8px;
+        font-size: 1rem;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        outline: none;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+      }
+
+      .search-bar:focus {
+        border-color: var(--cricket-gold);
+        box-shadow: 0 0 8px rgba(249, 168, 37, 0.3);
+      }
+
+      .search-bar::placeholder {
+        color: #6b7280;
+        font-style: italic;
+      }
+
+      .search-bar-container {
+        position: relative;
+      }
+
+      .search-bar-container::before {
+        content: "🔍";
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+        color: var(--cricket-green);
+      }
+
+      .search-bar-container .search-bar {
+        padding-left: 35px;
+      }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      function updateSelection(teamName) {
+        const checkboxes = document.querySelectorAll(
+          `input[name="${teamName}[]"]:checked`
+        );
+        const count = checkboxes.length;
+        const totalCost = Array.from(checkboxes).reduce(
+          (sum, cb) => sum + parseInt(cb.dataset.cost),
+          0
+        );
+
+        document.getElementById(
+          `${teamName}-count`
+        ).textContent = `Selected: ${count}/11`;
+        document.getElementById(
+          `${teamName}-cost`
+        ).textContent = `Cost: ${totalCost}/1000`;
+
+        return { count, totalCost };
+      }
+
+      function limitSelections(teamName) {
+        const checkboxes = document.querySelectorAll(
+          `input[name="${teamName}[]"]`
+        );
+        checkboxes.forEach((checkbox) => {
+          checkbox.addEventListener("change", () => {
+            const { count, totalCost } = updateSelection(teamName);
+
+            if (count > 11) {
+              checkbox.checked = false;
+              alert(
+                `You can only select 11 players for ${teamName.replace(
+                  "team",
+                  "Player "
+                )}.`
+              );
+              updateSelection(teamName);
+            } else if (totalCost > 1000) {
+              checkbox.checked = false;
+              alert(
+                `You've exceeded the 1000 point budget for ${teamName.replace(
+                  "team",
+                  "Player "
+                )}.`
+              );
+              updateSelection(teamName);
+            }
+          });
+        });
+      }
+
+      function validateAndSubmit() {
+        const team1 = updateSelection("team1");
+        const team2 = updateSelection("team2");
+
+        if (team1.count !== 11) {
+          alert(
+            `Player 1 must select exactly 11 players. Currently selected: ${team1.count}`
+          );
+          return false;
+        }
+        if (team2.count !== 11) {
+          alert(
+            `Player 2 must select exactly 11 players. Currently selected: ${team2.count}`
+          );
+          return false;
+        }
+        if (team1.totalCost > 1000) {
+          alert(
+            `Player 1 has exceeded the 1000 point budget. Current cost: ${team1.totalCost}`
+          );
+          return false;
+        }
+        if (team2.totalCost > 1000) {
+          alert(
+            `Player 2 has exceeded the 1000 point budget. Current cost: ${team2.totalCost}`
+          );
+          return false;
+        }
+
+        const team1Players = Array.from(
+          document.querySelectorAll('input[name="team1[]"]:checked')
+        ).map((cb) => cb.value);
+        const team2Players = Array.from(
+          document.querySelectorAll('input[name="team2[]"]:checked')
+        ).map((cb) => cb.value);
+        const duplicates = team1Players.filter((player) =>
+          team2Players.includes(player)
+        );
+        if (duplicates.length > 0) {
+          alert(
+            `Duplicate players selected: ${duplicates.join(
+              ", "
+            )}. Players cannot be in both teams.`
+          );
+          return false;
+        }
+
+        document.getElementById("fantasy-form").submit();
+      }
+
+      // Search Functionality
+      function filterPlayers(teamName) {
+        const searchInput = document.getElementById(`${teamName}-search`).value.toLowerCase();
+        const playerItems = document.querySelectorAll(`.player-list-${teamName} .player-item`);
+
+        playerItems.forEach((item) => {
+          const playerName = item.querySelector('.flex-1').textContent.toLowerCase();
+          if (playerName.includes(searchInput)) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+
+        // Update selection counts after filtering
+        updateSelection(teamName);
+      }
+
+      window.onload = () => {
+        limitSelections("team1");
+        limitSelections("team2");
+        updateSelection("team1");
+        updateSelection("team2");
+
+        // Add event listeners for search inputs
+        document.getElementById('team1-search').addEventListener('input', () => filterPlayers('team1'));
+        document.getElementById('team2-search').addEventListener('input', () => filterPlayers('team2'));
+      };
+    </script>
+  </head>
+  <body>
+    <div class="container mx-auto px-4 py-8">
+      <div class="text-center mb-10">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 header-animation">
+          <span class="cricket-ball"></span>
+          Fantasy Cricket Game
+          <span class="cricket-ball"></span>
+        </h1>
+      </div>
+
+      <form id="fantasy-form" method="POST" action="{% url 'fantasy_game' %}">
+        {% csrf_token %}
+        <div class="flex flex-col lg:flex-row gap-8">
+          <!-- Player 1 Team Selection -->
+          <div class="team-container flex-1 p-6">
+            <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">
+              <span class="border-b-4 border-green-600 pb-2"
+                >Player 1 Team</span
+              >
+            </h2>
+            <div class="flex justify-between items-center mb-4 px-2">
+              <p id="team1-count" class="text-lg font-semibold">
+                Selected: 0/11
+              </p>
+              <p id="team1-cost" class="text-lg font-bold">
+                Cost: <span>0</span>/1000
+              </p>
+            </div>
+            <div class="search-bar-container">
+              <input
+                type="text"
+                id="team1-search"
+                class="search-bar"
+                placeholder="Search Player 1..."
+              />
+            </div>
+            <div class="player-list p-4 player-list-team1">
+              {% for player in players %}
+              <div class="player-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="team1[]"
+                    value="{{ player }}"
+                    data-cost="{{ player_costs|get_item:player }}"
+                    onchange="updateSelection('team1')"
+                  />
+                  <span class="flex-1">{{ player }}</span>
+                  <span class="player-cost"
+                    >{{ player_costs|get_item:player }} pts</span
+                  >
+                </label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Player 2 Team Selection -->
+          <div class="team-container flex-1 p-6">
+            <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">
+              <span class="border-b-4 border-blue-600 pb-2">Player 2 Team</span>
+            </h2>
+            <div class="flex justify-between items-center mb-4 px-2">
+              <p id="team2-count" class="text-lg font-semibold">
+                Selected: 0/11
+              </p>
+              <p id="team2-cost" class="text-lg font-bold">
+                Cost: <span>0</span>/1000
+              </p>
+            </div>
+            <div class="search-bar-container">
+              <input
+                type="text"
+                id="team2-search"
+                class="search-bar"
+                placeholder="Search Player 2..."
+              />
+            </div>
+            <div class="player-list p-4 player-list-team2">
+              {% for player in players %}
+              <div class="player-item">
+                <label>
+                  <input
+                    type="checkbox"
+                    name="team2[]"
+                    value="{{ player }}"
+                    data-cost="{{ player_costs|get_item:player }}"
+                    onchange="updateSelection('team2')"
+                  />
+                  <span class="flex-1">{{ player }}</span>
+                  <span class="player-cost"
+                    >{{ player_costs|get_item:player }} pts</span
+                  >
+                </label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-10">
+          <button
+            type="button"
+            onclick="validateAndSubmit()"
+            class="submit-btn font-bold text-lg px-10 py-3"
+          >
+            START THE MATCH!
+          </button>
+        </div>
+      </form>
+
+      <!-- Results Section -->
+      {% if team1_players and team2_players %}
+      <div class="results-container mt-12 p-8 max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold text-center mb-8 text-gray-800">
+          Match Results
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-8 mb-8">
+          <div>
+            <h3 class="text-xl font-semibold mb-4 text-green-700">
+              Player 1 Team (Cost: {{ team1_cost }}/1000)
+            </h3>
+            <ul class="space-y-2">
+              {% for player in team1_players %}
+              <li
+                class="flex justify-between items-center py-2 px-3 bg-gray-50 rounded"
+              >
+                <span>{{ player }}</span>
+                <span
+                  class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold"
+                >
+                  {{ player_costs|get_item:player }} pts
+                </span>
+              </li>
+              {% endfor %}
+            </ul>
+            <p class="mt-4 text-center">
+              <span class="text-lg">Predicted Score:</span>
+              <span class="score-display ml-2">{{ team1_score }}</span>
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-xl font-semibold mb-4 text-blue-700">
+              Player 2 Team (Cost: {{ team2_cost }}/1000)
+            </h3>
+            <ul class="space-y-2">
+              {% for player in team2_players %}
+              <li
+                class="flex justify-between items-center py-2 px-3 bg-gray-50 rounded"
+              >
+                <span>{{ player }}</span>
+                <span
+                  class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold"
+                >
+                  {{ player_costs|get_item:player }} pts
+                </span>
+              </li>
+              {% endfor %}
+            </ul>
+            <p class="mt-4 text-center">
+              <span class="text-lg">Predicted Score:</span>
+              <span class="score-display ml-2">{{ team2_score }}</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="text-center mt-6">
+          <div class="winner-banner inline-block px-8 py-4">
+            <h3 class="text-2xl font-bold">
+              Winner: <span class="uppercase">{{ winner }}</span>
+            </h3>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>
