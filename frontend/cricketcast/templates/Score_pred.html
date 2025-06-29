@@ -28,7 +28,7 @@
           no-repeat center center fixed;
         background-size: cover;
         position: relative;
-        min-height: 100vh;
+        height: 100%;
       }
 
       body::before {
@@ -73,12 +73,11 @@
         max-width: 800px;
         margin: 2rem auto;
         padding: 20px;
+        color: black;
         background: rgba(255, 255, 255, 0.95);
         border-radius: 10px;
         border: 2px solid var(--cricket-gold);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        animation: fadeIn 0.5s ease-out;
       }
 
       .cricket-instructions:hover {
@@ -93,48 +92,40 @@
         left: 0;
         right: 0;
         height: 30px;
-        background: repeating-linear-gradient(
-          45deg,
-          rgba(255, 255, 255, 0.1),
-          rgba(255, 255, 255, 0.1) 10px,
-          rgba(0, 0, 0, 0.1) 10px,
-          rgba(0, 0, 0, 0.1) 20px
-        );
       }
 
       .cricket-instruction-item h3 {
         color: var(--cricket-green);
         font-size: 1.3rem;
         margin-bottom: 0.5rem;
-        animation: pulse 1.5s infinite;
       }
 
       .cricket-instruction-item p {
-        color: #fff;
+        color: black;
         font-size: 1rem;
         line-height: 1.5;
-        animation: fadeIn 0.8s ease-out;
       }
 
       .cricket-container {
         width: 80%;
         margin: 2rem auto;
+        color: white;
         padding: 30px;
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(19, 13, 13, 0.9);
         border-radius: 15px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         border: 3px solid var(--cricket-gold);
-        animation: fadeIn 0.5s ease-out;
+        animation: fadeIn 2s ease-out;
       }
 
       .cricket-section {
         margin: 20px 0;
         padding: 20px;
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(0, 0, 0, 0.95);
         border-radius: 10px;
         border: 2px solid var(--cricket-green);
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
+        transition: all 0.8s ease;
         position: relative;
       }
 
@@ -150,13 +141,7 @@
         left: 0;
         right: 0;
         height: 30px;
-        background: repeating-linear-gradient(
-          45deg,
-          rgba(255, 255, 255, 0.1),
-          rgba(255, 255, 255, 0.1) 10px,
-          rgba(0, 0, 0, 0.1) 10px,
-          rgba(0, 0, 0, 0.1) 20px
-        );
+        
       }
 
       .cricket-title {
@@ -164,7 +149,6 @@
         margin-bottom: 10px;
         color: var(--cricket-green);
         text-transform: uppercase;
-        animation: pulse 1.5s infinite;
       }
 
       .cricket-inputs {
@@ -185,7 +169,8 @@
       }
 
       .cricket-input,
-      .cricket-select {
+      .cricket-select,
+      .cricket-search-input {
         padding: 10px;
         border: 2px solid var(--cricket-green);
         border-radius: 8px;
@@ -197,7 +182,8 @@
       }
 
       .cricket-input:focus,
-      .cricket-select:focus {
+      .cricket-select:focus,
+      .cricket-search-input:focus {
         border-color: var(--cricket-gold);
         box-shadow: 0 0 8px rgba(249, 168, 37, 0.3);
         outline: none;
@@ -287,12 +273,6 @@
         left: -50%;
         width: 200%;
         height: 200%;
-        background: linear-gradient(
-          to bottom right,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0.3) 50%,
-          rgba(255, 255, 255, 0) 100%
-        );
         transform: rotate(30deg);
         animation: shine 3s infinite;
       }
@@ -383,7 +363,6 @@
         transform: translateY(-5px);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       }
-
       .cricket-update-section::before {
         content: "";
         position: absolute;
@@ -477,7 +456,8 @@
 
       @media (max-width: 600px) {
         .cricket-input,
-        .cricket-select {
+        .cricket-select,
+        .cricket-search-input {
           font-size: 0.9rem;
           padding: 8px;
         }
@@ -505,8 +485,8 @@
         <h3>Score Prediction</h3>
         <p>
           To predict a match score, select the innings, venue, batting and
-          bowling teams, current over, ball, and score. Choose the batter,
-          bowler, and non-striker from the dropdowns, then click "Predict Score"
+          bowling teams, current over, ball, and score. Search for and select the batter,
+          bowler, and non-striker using the search inputs and dropdowns, then click "Predict Score"
           to see the result. Double-tap the "Clear Form" button to reset all
           inputs.
         </p>
@@ -626,6 +606,12 @@
               required
             />
 
+            <input
+              type="text"
+              id="batter-search"
+              class="cricket-search-input"
+              placeholder="Search batter..."
+            />
             <select
               id="batter-dropdown"
               name="batter_name"
@@ -635,6 +621,12 @@
               <option value="" disabled selected>Select a batter</option>
             </select>
 
+            <input
+              type="text"
+              id="bowler-search"
+              class="cricket-search-input"
+              placeholder="Search bowler..."
+            />
             <select
               id="bowler-dropdown"
               name="bowler_name"
@@ -644,6 +636,12 @@
               <option value="" disabled selected>Select a bowler</option>
             </select>
 
+            <input
+              type="text"
+              id="non-striker-search"
+              class="cricket-search-input"
+              placeholder="Search non-striker..."
+            />
             <select
               id="non-striker-dropdown"
               name="non_striker_name"
@@ -1502,13 +1500,14 @@
       ];
 
       document.addEventListener("DOMContentLoaded", function () {
-        // Initialize dropdowns
+        // Initialize dropdowns and search inputs
         const venueDropdown = document.getElementById("venue-dropdown");
         const batterDropdown = document.getElementById("batter-dropdown");
         const bowlerDropdown = document.getElementById("bowler-dropdown");
-        const nonStrikerDropdown = document.getElementById(
-          "non-striker-dropdown"
-        );
+        const nonStrikerDropdown = document.getElementById("non-striker-dropdown");
+        const batterSearch = document.getElementById("batter-search");
+        const bowlerSearch = document.getElementById("bowler-search");
+        const nonStrikerSearch = document.getElementById("non-striker-search");
         const batterTeamDropdown = document.getElementById("batter_team");
         const bowlerTeamDropdown = document.getElementById("bowler_team");
         const form = document.getElementById("score-prediction-form");
@@ -1520,6 +1519,35 @@
         populateDropdown(batterDropdown, players, "batter_name");
         populateDropdown(bowlerDropdown, players, "bowler_name");
         populateDropdown(nonStrikerDropdown, players, "non_striker_name");
+
+        // Search functionality
+        function filterDropdown(dropdown, searchInput) {
+          searchInput.addEventListener("input", function () {
+            const filter = searchInput.value.toLowerCase();
+            const options = dropdown.querySelectorAll("option");
+            let hasMatch = false;
+
+            options.forEach((option, index) => {
+              if (index === 0) return; // Skip the placeholder option
+              const text = option.textContent.toLowerCase();
+              if (text.includes(filter)) {
+                option.style.display = "";
+                hasMatch = true;
+              } else {
+                option.style.display = "none";
+              }
+            });
+
+            // If no matches, clear the selection
+            if (!hasMatch && dropdown.value !== "") {
+              dropdown.value = "";
+            }
+          });
+        }
+
+        filterDropdown(batterDropdown, batterSearch);
+        filterDropdown(bowlerDropdown, bowlerSearch);
+        filterDropdown(nonStrikerDropdown, nonStrikerSearch);
 
         // Validate team and player selections
         function validateForm() {
@@ -1539,9 +1567,7 @@
             bowler !== "" &&
             nonStriker !== ""
           ) {
-            showError(
-              "Batter, bowler, and non-striker must be different players"
-            );
+            showError("Batter, bowler, and non-striker must be different players");
             return false;
           }
           return true;
@@ -1566,12 +1592,8 @@
         // Clear form function
         function clearForm() {
           // Reset radio buttons
-          document.querySelector(
-            'input[name="innings"][value="1"]'
-          ).checked = true;
-          document.querySelector(
-            'input[name="innings"][value="2"]'
-          ).checked = false;
+          document.querySelector('input[name="innings"][value="1"]').checked = true;
+          document.querySelector('input[name="innings"][value="2"]').checked = false;
 
           // Reset selects
           venueDropdown.value = "";
@@ -1581,10 +1603,21 @@
           bowlerDropdown.value = "";
           nonStrikerDropdown.value = "";
 
+          // Reset search inputs
+          batterSearch.value = "";
+          bowlerSearch.value = "";
+          nonStrikerSearch.value = "";
+
           // Reset number inputs
           document.getElementById("Over").value = 1;
           document.getElementById("Ball").value = 1;
           document.getElementById("current_score").value = 0;
+
+          // Reset dropdown options visibility
+          [batterDropdown, bowlerDropdown, nonStrikerDropdown].forEach((dropdown) => {
+            const options = dropdown.querySelectorAll("option");
+            options.forEach((option) => (option.style.display = ""));
+          });
 
           // Clear local storage
           localStorage.clear();
@@ -1658,10 +1691,7 @@
           const inputs = form.querySelectorAll("input, select");
           inputs.forEach((input) => {
             if (input.type === "radio" || input.type === "checkbox") {
-              localStorage.setItem(
-                input.name + "_" + input.value,
-                input.checked
-              );
+              localStorage.setItem(input.name + "_" + input.value, input.checked);
             } else {
               localStorage.setItem(input.name, input.value);
             }
