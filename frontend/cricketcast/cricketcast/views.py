@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from joblib import load
 import os
+from django.conf import settings
 # from django.conf import venue_mappings
 
 # Mapping of venues to home teams (assuming team indices match dropdown values)
@@ -760,7 +761,7 @@ def Score_pred(request):
             if data["batter_team"] == data["bowler_team"]:
                 return render(request, 'Score_pred.html', {
                     "error": "Batter and bowler teams must be different"
-                })
+                }) 
             if len(set([data["batter_name"], data["bowler_name"], data["non_striker_name"]])) < 3:
                 return render(request, 'Score_pred.html', {
                     "error": "Batter, bowler, and non-striker must be different players"
@@ -795,7 +796,7 @@ def Score_pred(request):
                     Neutral = False
 
             # Load model
-            model_path = "C:/Users/maste/Downloads/fast-API/cricketCast/cricket/src/modelETR.pkl"
+            model_path = os.path.join(settings.MODEL_DIR , "modelETR.pkl")
             try:
                 modelETR = load(model_path)
             except Exception as e:
@@ -1052,17 +1053,17 @@ def fantasy_game(request):
                 non_striker = team1_players[0] if team1_players[0] != batter else team1_players[1]
                 non_striker_code = players.index(non_striker) + 1
                 input_data = {
-                    'inning': 2,
-                    'over': 18,
-                    'ball': 6,
-                    'score': 120,
+                    'inning': 1,
+                    'over': 1,
+                    'ball': 1,
+                    'score': 0,
                     'Neutral': True,
                     'is_home_team': False,
                     'batter_code': batter_code,
                     'bowler_code': bowler_code,
-                    'non_striker_code': non_striker_code,
-                    'batting_team_code': 10,
-                    'bowling_team_code': 7
+                    'non_striker_code': 0,
+                    'batting_team_code': 0,
+                    'bowling_team_code': 0
                 }
                 score = predict_score(input_data)
                 team1_total_score += score
@@ -1076,16 +1077,16 @@ def fantasy_game(request):
                 non_striker_code = players.index(non_striker) + 1
                 input_data = {
                     'inning': 2,
-                    'over': 18,
-                    'ball': 6,
-                    'score': 120,
+                    'over': 1,
+                    'ball': 1,
+                    'score': 0,
                     'Neutral': True,
                     'is_home_team': False,
                     'batter_code': batter_code,
                     'bowler_code': bowler_code,
-                    'non_striker_code': non_striker_code,
-                    'batting_team_code': 7,
-                    'bowling_team_code': 10
+                    'non_striker_code': 0,
+                    'batting_team_code': 0,
+                    'bowling_team_code': 0
                 }
                 score = predict_score(input_data)
                 team2_total_score += score
