@@ -7,21 +7,7 @@ app = FastAPI()
 
 
 # Find the model file in the MODEL_DIR using shutil
-MODEL_DIR = "C:/Users/maste/Downloads/fast-API/cricketCast/cricket/cricketcast_test/New_cricket_cast/frontend/cricketcast/cricketcast"  # or the directory where your model is stored
-model_filename = "modelETR.pkl"
-model_path = None
-
-# Search for the model file in MODEL_DIR and its subdirectories
-for root, dirs, files in os.walk(MODEL_DIR):
-    print("Searching in directory:", root)
-    print("Files found:", files)
-    if model_filename in files:
-        model_path = os.path.join(root, model_filename)
-        break
-
-if model_path is None:
-    raise FileNotFoundError(f"{model_filename} not found in {MODEL_DIR}")
-
+model_path = "modelETR.pkl"
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allows all origins, adjust as needed
